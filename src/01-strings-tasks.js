@@ -304,8 +304,19 @@ function isString(value) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const obj = {
+    '♣': 0,
+    '♦': 13,
+    '♥': 26,
+    '♠': 39,
+    A: 0,
+    J: 10,
+    Q: 11,
+    K: 12,
+  };
+  const tmpValue = value.slice(0, value.length - 1);
+  return (tmpValue in obj ? obj[tmpValue] : (+tmpValue - 1)) + obj[value.slice(value.length - 1)];
 }
 
 
