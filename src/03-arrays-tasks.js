@@ -504,8 +504,13 @@ function getIntervalArray(start, end) {
  *   [ 'a', 'a', 'a', 'a' ]  => [ 'a' ]
  *   [ 1, 1, 2, 2, 3, 3, 4, 4] => [ 1, 2, 3, 4]
  */
-function distinct(/* arr */) {
-  throw new Error('Not implemented');
+function distinct(arr) {
+  return arr.reduce((uniqs, item) => {
+    if (!uniqs.includes(item)) {
+      uniqs.push(item);
+    }
+    return uniqs;
+  }, []);
 }
 
 /**
@@ -538,8 +543,16 @@ function distinct(/* arr */) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  return array.reduce((a, x) => {
+    let indx = a.findIndex((y) => y[0] === keySelector(x));
+    if (indx < 0) {
+      indx = a.length;
+      a.push(Array.of(keySelector(x), []));
+    }
+    a[indx][1].push(valueSelector(x));
+    return a;
+  }, []);
 }
 
 
@@ -556,8 +569,8 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.flatMap((x) => childrenSelector(x));
 }
 
 
