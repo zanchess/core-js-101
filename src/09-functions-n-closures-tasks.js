@@ -73,7 +73,7 @@ function getPolynom(...args) {
 
 /**
  * Memoizes passed function and returns function
- * which invoked first time calls the passed function and then always returns currentValued result.
+ * which invoked first time calls the passed function and then always returns cd result.
  *
  * @params {Function} func - function to memoize
  * @return {Function} memoized function
@@ -81,12 +81,19 @@ function getPolynom(...args) {
  * @example
  *   const memoizer = memoize(() => Math.random());
  *   memoizer() => some random number  (first run, evaluates the result of Math.random())
- *   memoizer() => the same random number  (second run, returns the previous currentValued result)
+ *   memoizer() => the same random number  (second run, returns the previous cd result)
  *   ...
- *   memoizer() => the same random number  (next run, returns the previous currentValued result)
+ *   memoizer() => the same random number  (next run, returns the previous cd result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const map = new Map();
+  return (x) => {
+    if (map.has(x)) {
+      return map.get(x);
+    }
+    map.set(x, func(x));
+    return map.get(x);
+  };
 }
 
 
@@ -105,8 +112,18 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  return () => {
+    for (let i = 0; i < attempts; i += 1) {
+      try {
+        const res = func();
+        return res;
+      } catch (error) {
+        // :(
+      }
+    }
+    return undefined;
+  };
 }
 
 
@@ -133,8 +150,14 @@ function retry(/* func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  return (...args) => {
+    const message = args.reduce((a, c) => `${a}${a === '' ? '' : ','}${JSON.stringify(c)}`, '');
+    logFunc(`${func.name}(${message}) starts`);
+    const res = func(...args);
+    logFunc(`${func.name}(${message}) ends`);
+    return res;
+  };
 }
 
 
@@ -174,10 +197,10 @@ function partialUsingArguments(fn, ...args1) {
  *   getId10() => 11
  */
 function getIdGeneratorFunction(startFrom) {
-  let currentValue = startFrom - 1;
+  let c = startFrom - 1;
   return () => {
-    currentValue += 1;
-    return currentValue;
+    c += 1;
+    return c;
   };
 }
 

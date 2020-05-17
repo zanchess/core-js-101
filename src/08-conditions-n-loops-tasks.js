@@ -121,8 +121,20 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(r1, r2) {
+  if (r1.left > r2.left + r2.width) {
+    return false;
+  }
+  if (r1.left + r1.width < r2.left) {
+    return false;
+  }
+  if (r1.top > r2.top + r2.height) {
+    return false;
+  }
+  if (r1.top + r1.height < r2.top) {
+    return false;
+  }
+  return true;
 }
 
 
@@ -177,8 +189,15 @@ function isInsideCircle(circle, point) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  let res;
+  for (let i = 0; i < str.length; i += 1) {
+    if (str.replace(str[i]).indexOf(str[i], i + 1) === -1 && /[a-zA-Z]/.test(str[i])) {
+      res = str[i];
+      break;
+    }
+  }
+  return res;
 }
 
 
@@ -204,8 +223,9 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const arr = [a, b].sort((c, d) => c - d);
+  return `${isStartIncluded ? '[' : '('}${arr[0]}, ${arr[1]}${isEndIncluded ? ']' : ')'}`;
 }
 
 
@@ -335,7 +355,7 @@ function isBracketsBalanced(str) {
  * https://en.wikipedia.org/wiki/Radix
  *
  * @param {number} num
- * @param {number} n, radix of the result
+ * @param {number} n, radix of the res
  * @return {string}
  *
  * @example:
@@ -347,13 +367,7 @@ function isBracketsBalanced(str) {
  *    365, 10 => '365'
  */
 function toNaryString(num, n) {
-  let value = '';
-  let value2 = num;
-  while (value2 > 0) {
-    value = (value2 % n.toString()) + value;
-    value2 = Math.floor(value2 / n);
-  }
-  return value;
+  return num.toString(n);
 }
 
 
@@ -403,7 +417,7 @@ function getMatrixProduct(/* m1, m2 */) {
  *
  * Position is provides as 3x3 array with the following values: 'X','0', undefined
  * Function should return who is winner in the current position according to the game rules.
- * The result can be: 'X','0',undefined
+ * The res can be: 'X','0',undefined
  *
  * @param {array} position
  * @return {string}
