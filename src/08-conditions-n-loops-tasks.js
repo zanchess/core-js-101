@@ -441,8 +441,30 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const row1 = position[0];
+  const row2 = position[1];
+  const row3 = position[2];
+  const column1 = position.map((el) => el[0]);
+  const column2 = position.map((el) => el[1]);
+  const column3 = position.map((el) => el[2]);
+  const diagLeft = position.map((el, i) => el[i]);
+  const diagRught = position.map((el, i) => el[2 - i]);
+  const allPossibleCombinations = [row1, row2, row3, column1, column2,
+    column3, diagLeft, diagRught];
+  function whoWin(combination, sign) {
+    if (combination.every((el) => el === sign) && combination.length === 3) {
+      return true;
+    }
+    return false;
+  }
+  if (allPossibleCombinations.some((arr) => whoWin(arr, 'X'))) {
+    return 'X';
+  }
+  if (allPossibleCombinations.some((arr) => whoWin(arr, '0'))) {
+    return '0';
+  }
+  return undefined;
 }
 
 
